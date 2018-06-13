@@ -75,6 +75,7 @@ class App extends React.Component {
 
 export default createBottomTabNavigator({
   Home: App,
+
   Settings: SettingsScreen,
 });
 
