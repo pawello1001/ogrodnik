@@ -66,7 +66,7 @@ class App extends React.Component {
     const { isLoading } = this.state;
     return (
       <View style={styles.container}>
-        {isLoading ? <Text>Fetching The Weather</Text> :
+        {isLoading ? <Text>Pobieranie pogody</Text> :
         <Weather weather={this.state.weatherCondition} temperature={this.state.temperature}/>}
       </View>
     );

@@ -1,51 +1,51 @@
 export const weatherConditions = {
     Rain: {
       color: '#005BEA',
-      title: 'Raining',
-      subtitle: 'Get a cup of coffee',
+      title: 'Deszcz',
+      subtitle: 'Weź parasolkę',
       icon: 'weather-rainy'
     },
     Clear: {
       color: '#f7b733',
-      title: 'So Sunny',
-      subtitle: 'It is hurting my eyes',
+      title: 'Słońce',
+      subtitle: 'Pij dużo wody',
       icon: 'weather-sunny'
     },
     Thunderstorm: {
       color: '#616161',
-      title: 'A Storm is coming',
-      subtitle: 'Because Gods are angry',
+      title: 'Burza',
+      subtitle: 'z piorunami',
       icon: 'weather-lightning'
     },
     Clouds: {
       color: '#1F1C2C',
-      title: 'Clouds',
-      subtitle: 'Everywhere',
+      title: 'Zachmurzenie',
+      subtitle: 'Całkowite',
       icon: 'weather-cloudy'
     },
-  
+
     Snow: {
       color: '#00d2ff',
-      title: 'Snow',
-      subtitle: 'Get out and build a snowman for me',
+      title: 'Śnieg',
+      subtitle: 'wyjdź ulepić bałwana',
       icon: 'weather-snowy'
     },
     Drizzle: {
       color: '#076585',
-      title: 'Drizzle',
-      subtitle: 'Partially raining...',
+      title: 'Mrzawka',
+      subtitle: 'Coś tam pada',
       icon: 'weather-hail'
     },
     Haze: {
       color: '#66A6FF',
-      title: 'Haze',
-      subtitle: 'Another name for Partial Raining',
+      title: 'Mrzawka',
+      subtitle: 'Coś tam pada',
       icon: 'weather-hail'
     },
     Mist: {
       color: '#3CD3AD',
-      title: 'Mist',
-      subtitle: "Don't roam in forests!",
+      title: 'Mgła',
+      subtitle: "Uważaj na drodze",
       icon: 'weather-fog'
     }
   };
