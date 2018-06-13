@@ -1,4 +1,5 @@
 import React from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { StyleSheet, Text, View, Animated } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
 import { API_KEY } from './WeatherAPIKey';
@@ -61,7 +62,6 @@ class App extends React.Component {
     });
   }
 
-
   render() {
     const { isLoading } = this.state;
     return (
@@ -73,13 +73,36 @@ class App extends React.Component {
   }
 }
 
-export default createBottomTabNavigator({
-  Home: App,
+export default createBottomTabNavigator(
+  {
+    Home: HomeScreen,
+    Kalendarz: SettingsScreen,
+    Pogoda: App,
+  },
+{
+  navigationOptions: ({ navigation }) => ({
+        tabBarIcon: ({ focused, tintColor }) => {
+          const { routeName } = navigation.state;
+          let iconName;
+          if (routeName === 'Home') {
+            iconName = `ios-home${focused ? '' : '-outline'}`;
+          } else if (routeName === 'Kalendarz') {
+            iconName = `ios-calendar${focused ? '' : '-outline'}`;
+          } else if (routeName === 'Pogoda') {
+            iconName = `ios-partly-sunny${focused ? '' : '-outline'}`;
+          }
 
-  Settings: SettingsScreen,
-});
-
-
+          // You can return any component that you like here! We usually use an
+          // icon component from react-native-vector-icons
+          return <Ionicons name={iconName} size={25} color={tintColor} />;
+        },
+      }),
+      tabBarOptions: {
+        activeTintColor: 'green',
+        inactiveTintColor: 'gray',
+      },
+}
+);
 
 const styles = StyleSheet.create({
   container: {
