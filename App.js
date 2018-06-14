@@ -1,12 +1,14 @@
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Expo, { SQLite } from 'expo';
-import { StyleSheet, TouchableOpacity, Text, View, Animated, TextInput} from 'react-native';
+import Expo, { Constants, SQLite } from 'expo';
+import { Platform, StyleSheet, ScrollView, TouchableOpacity, Text, View, Animated, TextInput, Image, FlatList, ListVIew, Button } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
 import { API_KEY } from './WeatherAPIKey';
 import Weather from './Weather';
+import { StackNavigator } from 'react-navigation';
 
 const db = SQLite.openDatabase('db.db');
+const db2 = SQLite.openDatabase({name: 'test.db'});
 
 class HomeScreen extends React.Component {
   render() {
@@ -17,6 +19,75 @@ class HomeScreen extends React.Component {
     );
   }
 }
+
+class HomeScreenSecond extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      brand: ".*",
+      model: ".*",
+      power: ".*",
+      color: ".*"
+    };
+  }
+
+  SampleFunction() {
+    this.setState({brand: ".*"});
+    this.setState({model: ".*"});
+    this.setState({power: ".*"});
+    this.setState({color: ".*"});
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>MARKA</Text>
+        <TextInput
+          style={{height: 40, width: 100}}
+          placeholder="Wpisz tekst"
+          onChangeText={(text) => this.setState({brand: text})}
+        />
+        <Text>MODEL</Text>
+        <TextInput
+          style={{height: 40, width: 100}}
+          placeholder="Wpisz tekst"
+          onChangeText={(text) => this.setState({model: text})}
+        />
+        <Text>MOC</Text>
+        <TextInput
+          style={{height: 40, width: 100}}
+          placeholder="Wpisz tekst"
+          onChangeText={(text) => this.setState({power: text})}
+        />
+        <Text>KOLOR</Text>
+        <TextInput
+          style={{height: 40, width: 100}}
+          placeholder="Wpisz tekst"
+          onChangeText={(text) => this.setState({color: text})}
+        />
+        <Button
+          onPress={this.SampleFunction.bind(this) } title="Resetuj wartości"
+        />
+        <Button
+          title="Go to Details"
+          onPress={() => {this.props.navigation.navigate('Details', {
+            brand: this.state.brand,
+            model: this.state.model,
+            power: this.state.power,
+            color: this.state.color,
+          });
+        }}
+        />
+      </View>
+    );
+  }
+}
+
+
+
+
 
 class TodolistScreen extends React.Component {
   state = {
@@ -106,9 +177,126 @@ class TodolistScreen extends React.Component {
 
 class FruitsScreen extends React.Component {
   render() {
+  return <RootStack />;
+}
+}
+
+
+
+
+
+class DetailsScreen extends React.Component {
+  state = {
+      items: []
+    }
+
+    executeSql = async (sql, params = []) => {
+      return new Promise((resolve, reject) => db.transaction(tx => {
+        tx.executeSql(sql, params, (_, { rows }) => resolve(rows._array), reject)
+      }))
+    }
+
+    componentWillMount () {
+      this.init()
+    }
+
+
+    init = async () => {
+      await this.executeSql('create table if not exists locations (latitude text, longitude numeric);');
+      this.select()
+    }
+
+    _insert = async () => {
+      await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', ['moz', -51.938130]);
+      await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', ['Marchew', null]);
+      await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', ['Pomidor', -51.937695]);
+      return true
+    }
+
+     select = () => {
+      this.executeSql('select * from locations', []).then(items => this.setState({items})  );
+    }
+
+    insert = () => {
+      this._insert().then(this.select)
+    }
+
+    clear = () => {
+      this.executeSql('delete from locations').then(this.select);
+    }
+
+    render() {
+      return (
+        <View style={styles.container}>
+          <TouchableOpacity style={{padding: 30, backgroundColor: '#fafafa'}} onPress={this.clear}>
+            <Text>CLEAR</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{padding: 30, backgroundColor: '#fafafa'}} onPress={this.insert}>
+            <Text>RUN</Text>
+          </TouchableOpacity>
+          <ScrollView>
+            <Text style={styles.paragraph}>
+              {JSON.stringify(this.state.items)}
+            </Text>
+          </ScrollView>
+        </View>
+      );
+    }
+}
+
+
+
+
+class DetailsScreenSecond extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      model: '',
+      brand: '',
+      color: '',
+      horsepower: '',
+      imagesrc: ''
+    };
+
+    const { params } = this.props.navigation.state;
+
+    const id = params ? params.id : null;
+
+    db2.transaction((tx) => {
+
+      tx.executeSql('SELECT * FROM car WHERE Id=?', [id], (tx, results) => {
+        var len = results.rows.length;
+
+        for (let i = 0; i < len; i++) {
+
+          var row = results.rows.item(i);
+
+          this.setState({ brand : row.brand});
+          this.setState({ model : row.model});
+          this.setState({ color : row.color});
+          this.setState({ horsepower : row.horsepower});
+          this.setState({ imagesrc : row.photosrc});
+
+          array.push(row);
+
+        }
+        });
+    });
+  }
+
+  render() {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Baza danych roślin</Text>
+      <View style={styles.continer}>
+        <Text>Szczegóły samochodu:</Text>
+        <Text>{'Marka ' + this.state.brand}</Text>
+        <Text>{'Model ' + this.state.model}</Text>
+        <Text>{'Kolor ' + this.state.color}</Text>
+        <Text>{'Moc '+ this.state.horsepower}</Text>
+        <Image
+          style={{width: 400, height: 400}}
+          source={{uri: this.state.imagesrc}}
+        />
       </View>
     );
   }
@@ -136,10 +324,10 @@ class Items extends React.Component {
             key={id}
             onPress={() => this.props.onPressItem && this.props.onPressItem(id)}
             style={{
-              padding: 10,
+              padding: 5,
               backgroundColor: done ? '#aaffaa' : 'white',
               borderColor: 'black',
-              borderWidth: 2,
+              borderWidth: 1,
             }}>
             <Text>{value}</Text>
           </TouchableOpacity>
@@ -158,6 +346,28 @@ class Items extends React.Component {
     });
   }
 }
+
+
+
+const RootStack = StackNavigator(
+  {
+    Home: {
+      screen: HomeScreenSecond,
+    },
+    Details: {
+      screen: DetailsScreen,
+    },
+    DetailsSecond: {
+      screen: DetailsScreenSecond,
+    },
+  },
+  {
+    initialRouteName: 'Home',
+  }
+);
+
+
+
 
 class App extends React.Component {
   state = {
@@ -245,5 +455,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
     paddingTop: Expo.Constants.statusBarHeight,
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#34495e',
   },
 });
