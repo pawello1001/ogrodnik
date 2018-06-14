@@ -7,8 +7,7 @@ import { API_KEY } from './WeatherAPIKey';
 import Weather from './Weather';
 import { StackNavigator } from 'react-navigation';
 
-const db = SQLite.openDatabase('db.db');
-const db2 = SQLite.openDatabase({name: 'test.db'});
+const db = SQLite.openDatabase('db2.db');
 
 class HomeScreen extends React.Component {
   render() {
@@ -22,11 +21,38 @@ class HomeScreen extends React.Component {
 
 class HomeScreenSecond extends React.Component {
 
+
+  state = {
+      items: []
+    }
+
+    executeSql = async (sql, params = []) => {
+      return new Promise((resolve, reject) => db.transaction(tx => {
+        tx.executeSql(sql, params, (_, { rows }) => resolve(rows._array), reject)
+      }))
+    }
+
+    componentWillMount () {
+      this.init()
+    }
+
+    init = async () => {
+      await this.executeSql('create table if not exists plants (id numeric, name text, longitude numeric);');
+      this.select()
+    }
+
+    _insert = async () => {
+      await this.executeSql('insert into plants (id, name, longitude) values (?, ?, ?)', [1,'Pomidory', -51.938130]);
+      await this.executeSql('insert into plants (id, name, longitude) values (?, ?, ?)', [2,'Marchew', null]);
+      await this.executeSql('insert into plants (id, name, longitude) values (?, ?, ?)', [3,'Kapusta', -51.937695]);
+      return true
+    }
+
   constructor(props) {
     super(props)
 
     this.state = {
-      brand: ".*",
+      name: ".*",
       model: ".*",
       power: ".*",
       color: ".*"
@@ -34,20 +60,21 @@ class HomeScreenSecond extends React.Component {
   }
 
   SampleFunction() {
-    this.setState({brand: ".*"});
+    this.setState({name: ".*"});
     this.setState({model: ".*"});
     this.setState({power: ".*"});
     this.setState({color: ".*"});
+    this._insert();
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text>MARKA</Text>
+        <Text>Nazwa:</Text>
         <TextInput
           style={{height: 40, width: 100}}
           placeholder="Wpisz tekst"
-          onChangeText={(text) => this.setState({brand: text})}
+          onChangeText={(text) => this.setState({name: text})}
         />
         <Text>MODEL</Text>
         <TextInput
@@ -73,7 +100,7 @@ class HomeScreenSecond extends React.Component {
         <Button
           title="Go to Details"
           onPress={() => {this.props.navigation.navigate('Details', {
-            brand: this.state.brand,
+            name: this.state.name,
             model: this.state.model,
             power: this.state.power,
             color: this.state.color,
@@ -84,9 +111,6 @@ class HomeScreenSecond extends React.Component {
     );
   }
 }
-
-
-
 
 
 class TodolistScreen extends React.Component {
@@ -183,8 +207,6 @@ class FruitsScreen extends React.Component {
 
 
 
-
-
 class DetailsScreen extends React.Component {
   state = {
       items: []
@@ -202,19 +224,18 @@ class DetailsScreen extends React.Component {
 
 
     init = async () => {
-      await this.executeSql('create table if not exists locations (latitude text, longitude numeric);');
+      await this.executeSql('create table if not exists plants (id numeric, name text, longitude numeric);');
       this.select()
     }
 
-    _insert = async () => {
-      await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', ['moz', -51.938130]);
-      await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', ['Marchew', null]);
-      await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', ['Pomidor', -51.937695]);
-      return true
-    }
 
      select = () => {
-      this.executeSql('select * from locations', []).then(items => this.setState({items})  );
+      this.executeSql('select * from plants', []).then(items => this.setState({items}));
+
+
+
+
+
     }
 
     insert = () => {
@@ -222,23 +243,25 @@ class DetailsScreen extends React.Component {
     }
 
     clear = () => {
-      this.executeSql('delete from locations').then(this.select);
+      this.executeSql('delete from plants').then(this.select);
     }
 
     render() {
       return (
         <View style={styles.container}>
-          <TouchableOpacity style={{padding: 30, backgroundColor: '#fafafa'}} onPress={this.clear}>
-            <Text>CLEAR</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{padding: 30, backgroundColor: '#fafafa'}} onPress={this.insert}>
-            <Text>RUN</Text>
-          </TouchableOpacity>
-          <ScrollView>
-            <Text style={styles.paragraph}>
-              {JSON.stringify(this.state.items)}
-            </Text>
-          </ScrollView>
+          <FlatList
+            data={this.state.items}
+            renderItem={({item}) => <View><Text></Text><Button title={item.name + ' ' + item.longitude}
+            onPress={() => {this.props.navigation.navigate('DetailsSecond', {
+              id: item.id,
+              name: item.name,
+              power: item.name,
+              color: item.name,
+              image: item.name,
+            });
+          }}
+            ></Button></View>}
+          />
         </View>
       );
     }
@@ -248,55 +271,26 @@ class DetailsScreen extends React.Component {
 
 
 class DetailsScreenSecond extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      model: '',
-      brand: '',
-      color: '',
-      horsepower: '',
-      imagesrc: ''
-    };
+    render() {
 
     const { params } = this.props.navigation.state;
 
     const id = params ? params.id : null;
 
-    db2.transaction((tx) => {
+    const name = params ? params.name : null;
+    const brand = params ? params.brand : null;
+    const color = params ? params.color : null;
+    const power = params ? params.power : null;
+    const image = params ? params.image : null;
 
-      tx.executeSql('SELECT * FROM car WHERE Id=?', [id], (tx, results) => {
-        var len = results.rows.length;
 
-        for (let i = 0; i < len; i++) {
 
-          var row = results.rows.item(i);
-
-          this.setState({ brand : row.brand});
-          this.setState({ model : row.model});
-          this.setState({ color : row.color});
-          this.setState({ horsepower : row.horsepower});
-          this.setState({ imagesrc : row.photosrc});
-
-          array.push(row);
-
-        }
-        });
-    });
-  }
-
-  render() {
     return (
       <View style={styles.continer}>
         <Text>Szczegóły samochodu:</Text>
-        <Text>{'Marka ' + this.state.brand}</Text>
-        <Text>{'Model ' + this.state.model}</Text>
-        <Text>{'Kolor ' + this.state.color}</Text>
-        <Text>{'Moc '+ this.state.horsepower}</Text>
-        <Image
-          style={{width: 400, height: 400}}
-          source={{uri: this.state.imagesrc}}
-        />
+        <Text>Nazwa: {JSON.stringify(name)}</Text>
+        <Text>Model: {JSON.stringify(name)}</Text>
+        <Text>Model: {JSON.stringify(name)}</Text>
       </View>
     );
   }
@@ -347,8 +341,6 @@ class Items extends React.Component {
   }
 }
 
-
-
 const RootStack = StackNavigator(
   {
     Home: {
@@ -365,9 +357,6 @@ const RootStack = StackNavigator(
     initialRouteName: 'Home',
   }
 );
-
-
-
 
 class App extends React.Component {
   state = {
@@ -414,7 +403,6 @@ class App extends React.Component {
     );
   }
 }
-
 export default createBottomTabNavigator(
   {
     Start: HomeScreen,
