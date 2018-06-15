@@ -54,14 +54,10 @@ class HomeScreenSecond extends React.Component {
     }
 
 
-
   constructor(props) {
     super(props)
-
       //this.drop();
-      this.init();
-
-    this._insert();
+    //  this._insert();
 
     this.state = {
       name: ".*",
@@ -228,9 +224,27 @@ class FruitsScreen extends React.Component {
 
 
 class DetailsScreen extends React.Component {
+constructor(props) {
+super(props)
+
+const { params } = this.props.navigation.state;
+
+this.name = params ? params.name : null;
+
+
+const categories = params ? params.categories : null;
+const gatunek = params ? params.gatunek : null;
+const month = params ? params.month : null;
+const photo = params ? params.photo : null;
+
+}
+
+
+
   state = {
       items: []
     }
+
 
     executeSql = async (sql, params = []) => {
       return new Promise((resolve, reject) => db.transaction(tx => {
@@ -238,7 +252,7 @@ class DetailsScreen extends React.Component {
       }))
     }
 
-    componentWillMount () {
+    componentDidMount () {
       this.init()
     }
 
@@ -248,8 +262,13 @@ class DetailsScreen extends React.Component {
       this.select()
     }
 
+
+
      select = () => {
-      this.executeSql('select * from plants', []).then(items => this.setState({items}));
+
+       console.log(JSON.stringify(this.name));
+
+      this.executeSql('select * from plants where name regexp ?', [this.name]).then(items => this.setState({items}));
 
     }
 
