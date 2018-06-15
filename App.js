@@ -36,62 +36,12 @@ class HomeScreenSecond extends React.Component {
       this.init()
     }
 
-
-    componentDidMount(){
-        AsyncStorage.getItem("alreadyLaunched").then(value => {
-            if(value == null){
-                 AsyncStorage.setItem('alreadyLaunched', true); // No need to wait for `setItem` to finish, although you might want to handle errors
-
-                 this.setState({firstLaunch: true});
-            }
-            else{
-                 this.setState({firstLaunch: false});
-            }}) // Add some error handling, also you can simply do this.setState({fistLaunch: value == null})
-    }
-
-
     init = async () => {
       await this.executeSql('create table if not exists plants (id numeric, name text, categories text ,gatunek text, month text, photo text);');
 
     }
 
     _insert = async () => {
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
-      await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
       await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [1,'Pomidory', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
       await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [2,'Marchew', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
       await this.executeSql('insert into plants (id, name, categories, gatunek, month, photo) values (?, ?, ?, ?, ?, ?)', [3,'Kapusta', 'Warzywa', 'Malinowe', 'Kwiecień', 'https://img.rewe-static.de/1041191/21306443_digital-image.png']);
@@ -111,7 +61,7 @@ class HomeScreenSecond extends React.Component {
       //this.drop();
       this.init();
 
-       this._insert();
+    this._insert();
 
     this.state = {
       name: ".*",
@@ -164,7 +114,10 @@ class HomeScreenSecond extends React.Component {
           onChangeText={(text) => this.setState({photo: text})}
         />
         <Button
-          title="Przejdź do lity"
+          onPress={this.SampleFunction.bind(this) } title="Resetuj wartości"
+        />
+        <Button
+          title="Go to Details"
           onPress={() => {this.props.navigation.navigate('Details', {
             name: this.state.name,
             gatunek: this.state.gatunek,
@@ -173,13 +126,6 @@ class HomeScreenSecond extends React.Component {
             photo: this.state.photo,
           });
         }}
-        />
-        <Button
-          onPress={this.SampleFunction.bind(this) } title="Resetuj wartości"
-        />
-        />
-        <Button
-          onPress={this.SampleFunction.bind(this) } title="Resetuj wartości"
         />
       </View>
     );
